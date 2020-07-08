@@ -4,6 +4,7 @@ namespace LaraDex\Http\Controllers;
 
 use LaraDex\Trainer;
 use Illuminate\Http\Request;
+use LaraDex\Http\Requests\StoreTrainerRequest; //Usamos el request creado para usar las validaciones
 
 class TrainerController extends Controller
 {
@@ -34,7 +35,7 @@ class TrainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTrainerRequest $request) //Usamos StoreTrainerRequest en lugar de Recuest para aplicar las validaciones
     {
 
         if ($request->hasfile('avatar')) { //Checamos si es un archivo con el nonbre avatar del formulario
@@ -46,9 +47,11 @@ class TrainerController extends Controller
         $trainer = new Trainer(); //Llamamos al modelo
         $trainer->name  = $request->input('name');  //Guardamos el el modelo el nombre
         $trainer->description  = $request->input('description');
-        $trainer->avatar = $name ; //Guardamos la ruta de la imagen a la base de datos
+        $trainer->avatar = $name; //Guardamos la ruta de la imagen a la base de datos
+        $trainer->slug = $request->input('slug');
         $trainer->save(); //Lo guardamos en la base de datos
-        return 'Guardado';
+        // return 'Guardado';
+        return redirect()->route('trainers.index');
 
 
         //return $request->input('name'); //Imprimimos el solo la variable
@@ -97,8 +100,9 @@ class TrainerController extends Controller
             $trainer->avatar = $name;
             $file->move(public_path().'/images/', $name); //Ponemos la carpeta donde se va a guardar con el nombre
         }
-
         $trainer->save();
+
+        return redirect()->route('trainers.show', [$trainer])->with('status', 'Entrenador Actualizado Correctamente');
     }
 
     /**
@@ -107,8 +111,11 @@ class TrainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Trainer $trainer)
     {
-        //
+        $file_path = public_path().'/images/'. $trainer->avatar; //Acedemos al path publico
+        \File::delete($file_path); //Eliminamos el archivo
+        $trainer->delete();
+        return redirect()->route('trainers.index');
     }
 }

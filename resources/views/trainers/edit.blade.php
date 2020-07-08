@@ -3,7 +3,14 @@
 @section('title', 'Trainer Edit')
 
 @section('content')
-    <form class="form-group" method="POST" action="/trainers/{{$trainer->slug}}" enctype="multipart/form-data">
+
+    {!! Form::model($trainer, ['route' => ['trainers.update', $trainer], 'method' => 'PUT', 'files' => true]) !!}
+        @include('trainers.form')
+        {!! Form::submit('Actualizar', ['class' => 'btn-primary'])!!}
+    {!! Form::close()!!}
+
+
+    {{-- <form class="form-group" method="POST" action="/trainers/{{$trainer->slug}}" enctype="multipart/form-data">
         @method('PUT') <!-- Indicamos que vamos hacer una actualizacion por el metodo PUT -->
         @csrf
         <div class="form-group">
@@ -20,5 +27,5 @@
             <input type="file" name="avatar" value="" class="">
         </div>
         <button type="submit" name="" class="btn-primary">Actualizar</button>
-    </form>
+    </form> --}}
 @endsection
