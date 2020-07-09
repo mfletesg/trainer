@@ -10,6 +10,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public function roles(){
+        return $this->belongsToMany('LaraDex\Role'); //Creamos la relacion con el rol
+    }
+
     /**
      * The attributes that are mass assignable.
      *

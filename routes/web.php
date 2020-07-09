@@ -27,3 +27,7 @@ Route::get('/mi_primer_ruta', function(){
     return 'Hello World, esta es mi primer ruta';
 });
 Route::resource('/trainers', 'TrainerController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
