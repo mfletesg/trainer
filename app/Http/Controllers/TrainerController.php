@@ -13,8 +13,9 @@ class TrainerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        return $request->user();
         $trainers = Trainer::all(); //Consultamos todos los datos con el metodo all();
         return view('trainers.index', compact('trainers')); //Compact genera un array con los datos requeridos
     }
@@ -52,6 +53,7 @@ class TrainerController extends Controller
         $trainer->save(); //Lo guardamos en la base de datos
         // return 'Guardado';
         return redirect()->route('trainers.index');
+        
 
 
         //return $request->input('name'); //Imprimimos el solo la variable
